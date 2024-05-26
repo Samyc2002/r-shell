@@ -1,3 +1,4 @@
+use std::path::Path;
 #[allow(unused_imports)]
 use std::{
     env,
@@ -43,9 +44,10 @@ fn main() {
                 let mut is_path_var = false;
                 let mut exe_path = String::new();
                 for path in paths.iter() {
-                    is_path_var = path.trim().ends_with(params[0]);
-
-                    if is_path_var {
+                    let mut full_path = Path::new(path).join(params[0]);
+                    full_path.set_extension("");
+                    if full_path.exists() {
+                        is_path_var = true;
                         exe_path = format!("{path}");
                         break;
                     }
