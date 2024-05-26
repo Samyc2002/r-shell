@@ -43,7 +43,7 @@ fn main() {
                 let mut is_path_var = false;
                 let mut exe_path = String::new();
                 for path in paths.iter() {
-                    is_path_var = path.ends_with(params[0]);
+                    is_path_var = path.trim().ends_with(params[0]);
 
                     if is_path_var {
                         exe_path = format!("{path}");
