@@ -54,7 +54,7 @@ fn main() {
                 }
 
                 if is_path_var {
-                    println!("{} is {}", &params[0], exe_path);
+                    println!("{}", exe_path);
                     continue;
                 }
 
