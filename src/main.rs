@@ -15,10 +15,18 @@ fn main() {
 
         let input = input.trim();
 
-        if input == "exit 0" {
-            break;
-        }
+        let input_parts: Vec<&str> = input.split(" ").collect();
 
-        println!("{}: command not found", input);
+        let command = input_parts[0];
+        let params = &input_parts[1..];
+
+        if command == "exit" {
+            break;
+        } else if command == "echo" {
+            let output = params.join(" ");
+            println!("{output}");
+        } else {
+            println!("{}: command not found", input);
+        }
     }
 }
