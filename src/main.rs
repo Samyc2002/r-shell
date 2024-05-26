@@ -6,6 +6,8 @@ fn main() {
     // Wait for user input
     let stdin = io::stdin();
 
+    let commands = &["exit", "echo", "type"];
+
     loop {
         print!("$ ");
         io::stdout().flush().unwrap();
@@ -25,6 +27,15 @@ fn main() {
         } else if command == "echo" {
             let output = params.join(" ");
             println!("{output}");
+        } else if command == "type" {
+            if params.len() > 0 {
+                let is_builtin = if commands.contains(&params[0]) {
+                    "is a shell builtin"
+                } else {
+                    "not found"
+                };
+                println!("{} {}", &params[0], is_builtin);
+            }
         } else {
             println!("{}: command not found", input);
         }
