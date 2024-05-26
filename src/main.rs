@@ -48,7 +48,7 @@ fn main() {
                     full_path.set_extension("");
                     if full_path.exists() {
                         is_path_var = true;
-                        exe_path = format!("{path}");
+                        exe_path = format!("{}", full_path.display());
                         break;
                     }
                 }
