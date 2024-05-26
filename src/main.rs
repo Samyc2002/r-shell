@@ -13,5 +13,5 @@ fn main() {
     
     let input = input.trim();
 
-    print!("{}: command not found", input);
+    println!("{}: command not found", input);
 }
