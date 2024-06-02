@@ -66,6 +66,9 @@ fn main() {
 
                 println!("{} not found", &params[0]);
             }
+        } else if command == "pwd" {
+            let cur_dir = env::current_dir().unwrap();
+            println!("{}", cur_dir.display());
         } else {
             let (is_path_var, exe_path) = get_full_path(command);
             if is_path_var {
