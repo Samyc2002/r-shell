@@ -8,5 +8,5 @@
 exec cargo run \
     --quiet \
     --release \
-    --target-dir=/tmp/codecrafters-shell-target \
+    --target-dir=/tmp/r-shell \
     --manifest-path $(dirname $0)/Cargo.toml -- "$@"
