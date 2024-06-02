@@ -28,7 +28,7 @@ fn main() {
     // Wait for user input
     let stdin = io::stdin();
 
-    let commands = &["exit", "echo", "type"];
+    let commands = &["exit", "echo", "type", "pwd"];
 
     loop {
         print!("$ ");
