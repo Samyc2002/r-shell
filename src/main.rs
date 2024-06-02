@@ -1,6 +1,7 @@
 use std::{
     env,
     io::{self, Write},
+    process::ExitStatus,
 };
 use std::{path::Path, process::Command};
 
@@ -28,14 +29,20 @@ fn main() {
     // Wait for user input
     let stdin = io::stdin();
 
-    let commands = &["exit", "echo", "type"];
+    let commands = &["exit", "echo", "type", "pwd", "cd"];
 
     loop {
         print!("$ ");
         io::stdout().flush().unwrap();
 
         let mut input = String::new();
-        stdin.read_line(&mut input).unwrap();
+        match stdin.read_line(&mut input) {
+            Ok(n) => n,
+            Err(err) => {
+                println!("Error: {}", err);
+                0
+            }
+        };
 
         let input = input.trim();
 
@@ -67,17 +74,48 @@ fn main() {
                 println!("{} not found", &params[0]);
             }
         } else if command == "pwd" {
-            let cur_dir = env::current_dir().unwrap();
+            let cur_dir = env::current_dir().unwrap_or_default();
             println!("{}", cur_dir.display());
+        } else if command == "cd" {
+            if params.len() > 0 {
+                let path_param = params[0];
+                let mut new_path = String::new();
+                if path_param.starts_with("~") {
+                    let home_dir = match env::var("HOME") {
+                        Ok(home_path) => home_path,
+                        Err(err) => {
+                            println!("Error: {}", err);
+                            String::new()
+                        }
+                    };
+                    new_path = path_param.replace("~", &home_dir[..]);
+                }
+                let new_path = Path::new(&new_path);
+                if env::set_current_dir(new_path).is_err() {
+                    println!("cd: {}: No such file or directory", new_path.display());
+                }
+            }
         } else {
             let (is_path_var, exe_path) = get_full_path(command);
             if is_path_var {
-                let mut child = Command::new(exe_path)
+                let mut child = match Command::new(exe_path)
                     .args(params)
                     .stdout(io::stdout())
                     .spawn()
-                    .unwrap();
-                child.wait().unwrap();
+                {
+                    Ok(child) => child,
+                    Err(_) => {
+                        println!("Error spawning child process");
+                        continue;
+                    }
+                };
+                match child.wait() {
+                    Ok(status) => status,
+                    Err(err) => {
+                        println!("Error: {err}");
+                        ExitStatus::default()
+                    }
+                };
             } else {
                 println!("{}: command not found", input);
             }
